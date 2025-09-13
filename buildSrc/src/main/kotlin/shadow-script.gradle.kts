@@ -14,14 +14,13 @@ tasks {
         relocate("dev.jorel.commandapi", "de.miraculixx.bmbm.commandapi")
         relocate("com.tcoded.folialib", "de.miraculixx.bmbm.lib.folialib")
         
-        // Настройка имени JAR файла в формате проект-версия-коммит
-        val projectName = project.name
+        // Настройка имени JAR файла в формате BlueMap-BannerMarker-версия-коммит
         val version = project.version.toString()
         val commitHash = providers.exec {
             commandLine("git", "rev-parse", "--short", "HEAD")
         }.standardOutput.asText.get().trim()
         
-        archiveBaseName.set("$projectName-$version-$commitHash")
+        archiveBaseName.set("BlueMap-BannerMarker-$version-$commitHash")
         archiveVersion.set("")
     }
 }

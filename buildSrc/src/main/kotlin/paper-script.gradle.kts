@@ -22,25 +22,23 @@ tasks {
     }
     
     reobfJar {
-        // Настройка имени JAR файла в формате проект-версия-коммит
-        val projectName = project.name
+        // Настройка имени JAR файла в формате BlueMap-BannerMarker-версия-коммит
         val version = project.version.toString()
         val commitHash = providers.exec {
             commandLine("git", "rev-parse", "--short", "HEAD")
         }.standardOutput.asText.get().trim()
         
-        outputJar.set(layout.buildDirectory.file("libs/$projectName-$version-$commitHash-reobf.jar"))
+        outputJar.set(layout.buildDirectory.file("libs/BlueMap-BannerMarker-$version-$commitHash-reobf.jar"))
     }
     
     jar {
         // Настройка имени обычного JAR файла
-        val projectName = project.name
         val version = project.version.toString()
         val commitHash = providers.exec {
             commandLine("git", "rev-parse", "--short", "HEAD")
         }.standardOutput.asText.get().trim()
         
-        archiveBaseName.set("$projectName-$version-$commitHash")
+        archiveBaseName.set("BlueMap-BannerMarker-$version-$commitHash")
         archiveVersion.set("")
     }
 }
