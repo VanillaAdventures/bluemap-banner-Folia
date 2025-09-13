@@ -36,6 +36,8 @@ class Main : KPaper() {
     private lateinit var localizer: Localization
 
     override fun load() {
+        INSTANCE = this
+        foliaLib = FoliaLib(this)
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).beLenientForMinorVersions(true))
 
         dataFolder.mkdir()
@@ -47,8 +49,6 @@ class Main : KPaper() {
     }
 
     override fun startup() {
-        INSTANCE = this
-        foliaLib = FoliaLib(this)
         CommandAPI.onEnable()
         server.pluginManager.registerEvents(GlobalListener, this)
 
