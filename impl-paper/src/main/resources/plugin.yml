@@ -8,6 +8,7 @@ load: STARTUP
 api-version: 1.13
 depend:
   - "BlueMap"
+folia-supported: true
 libraries:
   - "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
   - "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
