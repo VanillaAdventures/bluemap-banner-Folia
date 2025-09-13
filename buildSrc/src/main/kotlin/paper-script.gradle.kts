@@ -20,4 +20,27 @@ tasks {
     assemble {
         dependsOn(reobfJar)
     }
+    
+    reobfJar {
+        // Настройка имени JAR файла в формате проект-версия-коммит
+        val projectName = project.name
+        val version = project.version.toString()
+        val commitHash = providers.exec {
+            commandLine("git", "rev-parse", "--short", "HEAD")
+        }.standardOutput.asText.get().trim()
+        
+        outputJar.set(layout.buildDirectory.file("libs/$projectName-$version-$commitHash-reobf.jar"))
+    }
+    
+    jar {
+        // Настройка имени обычного JAR файла
+        val projectName = project.name
+        val version = project.version.toString()
+        val commitHash = providers.exec {
+            commandLine("git", "rev-parse", "--short", "HEAD")
+        }.standardOutput.asText.get().trim()
+        
+        archiveBaseName.set("$projectName-$version-$commitHash")
+        archiveVersion.set("")
+    }
 }

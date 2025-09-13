@@ -44,6 +44,16 @@ class Main : KPaper() {
     }
 
     override fun startup() {
+        // Setup
+        KPaperConfiguration.Events.autoRegistration = false
+
+        // Load Content
+        assetsLoader = MarkerImages()
+        listener = listOf(BlockBreakListener(), BlockPlaceListener(), ClickManager())
+        
+        // Register commands before CommandAPI.onEnable()
+        OverviewCommand()
+        
         CommandAPI.onEnable()
         server.pluginManager.registerEvents(GlobalListener, this)
 
@@ -51,14 +61,6 @@ class Main : KPaper() {
         foliaLib.scheduler.runAsync {
             APIConnector.checkVersion(description.version.toIntOrNull() ?: 0)
         }
-
-        // Setup
-        KPaperConfiguration.Events.autoRegistration = false
-
-        // Load Content
-        assetsLoader = MarkerImages()
-        listener = listOf(BlockBreakListener(), BlockPlaceListener(), ClickManager())
-        OverviewCommand()
 
         BlueMapAPI.onEnable(onBlueMapEnable)
         BlueMapAPI.onDisable(onBlueMapDisable)

@@ -27,24 +27,26 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 class OverviewCommand {
-    val command = commandTree("bmbanner") {
-        withPermission("bmb.overview")
-        withAliases("bmb")
-        literalArgument("global") {
-            playerExecutor { player, _ ->
-                val markers = MarkerManager.getMarkers()
-                openGUI(player, null, markers)
-            }
-        }
-        offlinePlayerArgument("target") {
-            playerExecutor { player, args ->
-                val target = args[0] as OfflinePlayer
-                val markers = MarkerManager.getMarkers(target.uniqueId)
-                if (markers.isEmpty()) {
-                    player.sendMessage(msg("command.no-marker", listOf(target.name ?: "Unknown")))
-                    return@playerExecutor
+    init {
+        commandTree("banner-marker") {
+            withPermission("banner-marker.command.settings")
+            withAliases("bmb")
+            literalArgument("global") {
+                playerExecutor { player, _ ->
+                    val markers = MarkerManager.getMarkers()
+                    openGUI(player, null, markers)
                 }
-                openGUI(player, target, markers)
+            }
+            offlinePlayerArgument("target") {
+                playerExecutor { player, args ->
+                    val target = args[0] as OfflinePlayer
+                    val markers = MarkerManager.getMarkers(target.uniqueId)
+                    if (markers.isEmpty()) {
+                        player.sendMessage(msg("command.no-marker", listOf(target.name ?: "Unknown")))
+                        return@playerExecutor
+                    }
+                    openGUI(player, target, markers)
+                }
             }
         }
     }
@@ -95,7 +97,7 @@ class OverviewCommand {
                     )
                 }
             }
-        }.open()
+        }.open(player)
         player.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, 1f, 1f)
     }
 }
