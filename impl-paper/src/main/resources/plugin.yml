@@ -23,3 +23,6 @@ commands:
     permission: banner-marker.command.settings
     aliases:
       - bmb
+  test-bmb:
+    permission: banner-marker.command.settings
+    description: "Test command for debugging"

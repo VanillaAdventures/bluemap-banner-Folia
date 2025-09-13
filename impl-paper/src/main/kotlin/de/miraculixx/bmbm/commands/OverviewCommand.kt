@@ -33,12 +33,14 @@ class OverviewCommand {
             withAliases("bmb")
             literalArgument("global") {
                 playerExecutor { player, _ ->
+                    PluginManager.logger.info("DEBUG: Global command executed by ${player.name}")
                     val markers = MarkerManager.getMarkers()
                     openGUI(player, null, markers)
                 }
             }
             offlinePlayerArgument("target") {
                 playerExecutor { player, args ->
+                    PluginManager.logger.info("DEBUG: Target command executed by ${player.name} for target ${args[0]}")
                     val target = args[0] as OfflinePlayer
                     val markers = MarkerManager.getMarkers(target.uniqueId)
                     if (markers.isEmpty()) {

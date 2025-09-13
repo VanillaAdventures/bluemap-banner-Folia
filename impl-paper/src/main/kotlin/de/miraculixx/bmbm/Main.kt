@@ -2,6 +2,8 @@ package de.miraculixx.bmbm
 
 import de.bluecolored.bluemap.api.BlueMapAPI
 import de.miraculixx.bmbm.commands.OverviewCommand
+import de.miraculixx.bmbm.commands.TestCommand
+import de.miraculixx.bmbm.commands.SimpleCommand
 import de.miraculixx.bmbm.map.MarkerManager
 import de.miraculixx.bmbm.map.events.BlockBreakListener
 import de.miraculixx.bmbm.map.events.BlockPlaceListener
@@ -38,7 +40,9 @@ class Main : KPaper() {
     override fun load() {
         INSTANCE = this
         foliaLib = FoliaLib(this)
+        logger.info("DEBUG: Initializing CommandAPI...")
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).beLenientForMinorVersions(true))
+        logger.info("DEBUG: CommandAPI loaded successfully")
 
         dataFolder.mkdir()
     }
@@ -52,9 +56,20 @@ class Main : KPaper() {
         listener = listOf(BlockBreakListener(), BlockPlaceListener(), ClickManager())
         
         // Register commands before CommandAPI.onEnable()
+        logger.info("DEBUG: Registering commands...")
         OverviewCommand()
+        TestCommand()
+        logger.info("DEBUG: Commands registered successfully")
         
+        logger.info("DEBUG: Enabling CommandAPI...")
         CommandAPI.onEnable()
+        logger.info("DEBUG: CommandAPI enabled successfully")
+        
+        // Register simple command as fallback
+        logger.info("DEBUG: Registering simple command...")
+        getCommand("banner-marker")?.setExecutor(SimpleCommand())
+        logger.info("DEBUG: Simple command registered successfully")
+        
         server.pluginManager.registerEvents(GlobalListener, this)
 
         // Use FoliaLib scheduler for async version check
