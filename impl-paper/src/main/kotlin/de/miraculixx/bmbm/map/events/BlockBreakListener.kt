@@ -9,11 +9,11 @@ import de.miraculixx.kpaper.event.listen
 import de.miraculixx.kpaper.event.register
 import de.miraculixx.kpaper.event.unregister
 import de.miraculixx.kpaper.localization.msg
-import de.miraculixx.kpaper.runnables.taskRunLater
 import org.bukkit.Material
 import org.bukkit.Tag
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPhysicsEvent
+import de.miraculixx.bmbm.Main
 
 class BlockBreakListener : Listener {
     private val onBlockBreak = listen<BlockBreakEvent> {
@@ -37,12 +37,14 @@ class BlockBreakListener : Listener {
         val block = it.block
         if (!Tag.BANNERS.isTagged(block.type)) return@listen
         val loc = block.location
-        // Vvv This is awful. If anyone knows a better solution, please DM me! Vvv
-        taskRunLater(1, false) {
-            if (loc.block.type == Material.AIR) {
-                val vector = Vector3d.from(loc.x, loc.y, loc.z)
-                val owner = MarkerManager.getMarkerOwner(vector) ?: return@taskRunLater
-                MarkerManager.removeMarker(vector, loc.world.name, owner)
+        // Use FoliaLib scheduler for location-based task execution with delay
+        Main.foliaLib.scheduler.runNextTick {
+            Main.foliaLib.scheduler.runAtLocation(loc) {
+                if (loc.block.type == Material.AIR) {
+                    val vector = Vector3d.from(loc.x, loc.y, loc.z)
+                    val owner = MarkerManager.getMarkerOwner(vector) ?: return@runAtLocation
+                    MarkerManager.removeMarker(vector, loc.world.name, owner)
+                }
             }
         }
     }

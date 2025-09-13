@@ -22,11 +22,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.function.Consumer
+import com.tcoded.folialib.FoliaLib
 
 class Main : KPaper() {
     companion object {
         lateinit var INSTANCE: KPaper
         lateinit var localization: Localization
+        lateinit var foliaLib: FoliaLib
     }
 
     private lateinit var listener: List<Listener>
@@ -38,13 +40,15 @@ class Main : KPaper() {
 
         dataFolder.mkdir()
 
-//        CoroutineScope(Dispatchers.Default).launch {
-//            APIConnector.checkVersion(description.version.toIntOrNull() ?: 0)
-//        }
+        // Use FoliaLib scheduler for async version check
+        foliaLib.scheduler.runAsync {
+            APIConnector.checkVersion(description.version.toIntOrNull() ?: 0)
+        }
     }
 
     override fun startup() {
         INSTANCE = this
+        foliaLib = FoliaLib(this)
         CommandAPI.onEnable()
         server.pluginManager.registerEvents(GlobalListener, this)
 
@@ -65,6 +69,7 @@ class Main : KPaper() {
         BlueMapAPI.unregisterListener(onBlueMapEnable)
         BlueMapAPI.unregisterListener(onBlueMapDisable)
         MarkerManager.saveAllMarker()
+        foliaLib.scheduler.cancelAllTasks()
         logger.info("Successfully saved all data! Good Bye :)")
     }
 
