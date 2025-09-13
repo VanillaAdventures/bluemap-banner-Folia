@@ -41,16 +41,16 @@ class Main : KPaper() {
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).beLenientForMinorVersions(true))
 
         dataFolder.mkdir()
-
-        // Use FoliaLib scheduler for async version check
-        foliaLib.scheduler.runAsync {
-            APIConnector.checkVersion(description.version.toIntOrNull() ?: 0)
-        }
     }
 
     override fun startup() {
         CommandAPI.onEnable()
         server.pluginManager.registerEvents(GlobalListener, this)
+
+        // Use FoliaLib scheduler for async version check
+        foliaLib.scheduler.runAsync {
+            APIConnector.checkVersion(description.version.toIntOrNull() ?: 0)
+        }
 
         // Setup
         KPaperConfiguration.Events.autoRegistration = false
